@@ -13,6 +13,7 @@ def get_img_url(_id):
 
     except:
         print('socket timed out - URL %s', url)
+        save_url_to_file(_id, "D:\\DivineCatch\\err.log")
         return ret
     else:
         buf = buf.decode('UTF-8')
@@ -40,10 +41,11 @@ def save_icon(_url, _id):
     f = open("D:\\DivineCatch\\Icon\\" + file_name, 'wb')
 
     try:
-        req = urllib.request.urlopen(_url, timeout = 60)
+        req = urllib.request.urlopen(_url, timeout = 120)
         buf = req.read()
     except:
         print('socket timed out - URL %s', _url)
+        save_url_to_file(_url, "D:\\DivineCatch\\missing.log")
         f.close()
         return
     else:
@@ -69,7 +71,7 @@ def save_url_to_file(_url, _file):
     f.close()
 
 if __name__ == '__main__':
-    for i in range(4, 5):
+    for i in range(145, 227):
         str_id = str(i).zfill(3)
         print("Begin ID: " + str_id + ":")
         list_icon= get_img_url(str_id)
