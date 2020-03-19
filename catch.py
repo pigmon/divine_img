@@ -13,7 +13,7 @@ def get_img_url(_id):
 
     except:
         print('socket timed out - URL %s', url)
-        save_url_to_file(_id, "D:\\DivineCatch\\err.log")
+        save_url_to_file(_id, "D:\\DivineCatch\\missing_page.log")
         return ret
     else:
         buf = buf.decode('UTF-8')
@@ -36,6 +36,8 @@ def get_img_url(_id):
 
 
 def save_icon(_url, _id):
+    """Saving a icon image from a url"""
+
     file_name = _id + "-icon.png"
     print("Saving " + _url + " as file " + "[" + file_name + "].")
     f = open("D:\\DivineCatch\\Icon\\" + file_name, 'wb')
@@ -45,7 +47,7 @@ def save_icon(_url, _id):
         buf = req.read()
     except:
         print('socket timed out - URL %s', _url)
-        save_url_to_file(_url, "D:\\DivineCatch\\missing.log")
+        save_url_to_file(_url, "D:\\DivineCatch\\missing_img.log", _endl = "\n")
         f.close()
         return
     else:
@@ -56,22 +58,33 @@ def save_icon(_url, _id):
     
 
 def save_big(_url, _id):
-    file_name = _id + "-icon.png"
+    """Saving a big image from a url"""
+
+    file_name = _id + ".png"
     print("Saving " + _url + " as file " + "[" + file_name + "].")
     f = open("D:\\DivineCatch\\Big\\" + file_name, 'wb')
-    req = urllib.request.urlopen(_url)
-    buf = req.read()
-    f.write(buf)
-    f.close()
-    print("Done.")
 
-def save_url_to_file(_url, _file):
+    try:
+        req = urllib.request.urlopen(_url, timeout = 120)
+        buf = req.read()
+    except:
+        print('socket timed out - URL %s', _url)
+        save_url_to_file(_url, "D:\\DivineCatch\\missing_img.log", _endl = "\n")
+        f.close()
+        return
+    else:
+        f.write(buf)
+        print("Done.")
+
+    f.close()
+
+def save_url_to_file(_url, _file, _endl = ","):
     f = open(_file, 'a')
-    f.write(_url + "\n")
+    f.write(_url + _endl)
     f.close()
 
 if __name__ == '__main__':
-    for i in range(145, 227):
+    for i in range(6, 8):
         str_id = str(i).zfill(3)
         print("Begin ID: " + str_id + ":")
         list_icon= get_img_url(str_id)
